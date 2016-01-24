@@ -9,9 +9,7 @@ module Travis
         self
       end
 
-      def config
-        @config
-      end
+      attr_reader :config, :options
 
       def config=(config, deprecated = true)
         puts 'Calling Travis::Amqp.config= is deprecated. Call Travis::Amqp.setup(config) instead.' if deprecated
@@ -26,6 +24,9 @@ module Travis
         end
 
         @config = config
+
+        @options = {}
+        @options[:spec] = config.delete(:spec) if config[:spec]
       end
 
       def connected?
@@ -35,7 +36,7 @@ module Travis
       def connection
         @connection ||=  begin
           require 'bunny'
-          bunny = Bunny.new(config, :spec => '09')
+          bunny = Bunny.new(config, options)
           bunny.start
           bunny
         end
