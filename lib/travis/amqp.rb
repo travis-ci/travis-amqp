@@ -16,6 +16,10 @@ end
 
 Travis::Amqp::Publisher.class_eval do
   class << self
+    def builds(routing_key)
+      new(routing_key)
+    end
+
     def jobs(routing_key)
       new("reporting.jobs.#{routing_key}", :type => 'topic', :name => 'reporting')
     end
