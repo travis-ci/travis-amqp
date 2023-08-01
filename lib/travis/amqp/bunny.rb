@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Travis
   module Amqp
     require 'travis/amqp/bunny/publisher'
@@ -11,7 +13,7 @@ module Travis
 
       attr_reader :config, :options
 
-      def config=(config, deprecated = true)
+      def config=(config, deprecated: true)
         puts 'Calling Travis::Amqp.config= is deprecated. Call Travis::Amqp.setup(config) instead.' if deprecated
 
         config = config.dup
@@ -34,20 +36,20 @@ module Travis
       end
 
       def connection
-        @connection ||=  begin
+        @connection ||= begin
           require 'bunny'
           bunny = Bunny.new(config, options)
           bunny.start
           bunny
         end
       end
-      alias :connect :connection
+      alias connect connection
 
       def disconnect
-        if connection
-          connection.close if connection.open?
-          @connection = nil
-        end
+        return unless connection
+
+        connection.close if connection.open?
+        @connection = nil
       end
     end
   end
