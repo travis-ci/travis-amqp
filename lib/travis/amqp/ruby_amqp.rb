@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'amqp'
 require 'amqp/utilities/event_loop_helper'
 
@@ -8,14 +10,12 @@ module Travis
 
     class << self
       def setup(config)
-        self.send(:config=, config.to_h, false)
+        send(:config=, config.to_h, false)
       end
 
-      def config
-        @config
-      end
+      attr_reader :config
 
-      def config=(config, deprecated = true)
+      def config=(config, deprecated: true)
         puts 'Calling Travis::Amqp.config= is deprecated. Call Travis::Amqp.setup(config) instead.' if deprecated
         @config = config
       end
@@ -27,21 +27,21 @@ module Travis
       def connection
         @connection ||= begin
           AMQP::Utilities::EventLoopHelper.run
-          AMQP.start(config) do |conn, open_ok|
-            conn.on_tcp_connection_loss do |conn, settings|
-              puts "[network failure] Trying to reconnect..."
-              conn.reconnect(false, 2)
+          AMQP.start(config) do |conn, _open_ok|
+            conn.on_tcp_connection_loss do |con, _settings|
+              puts '[network failure] Trying to reconnect...'
+              con.reconnect(false, 2)
             end
           end
         end
       end
-      alias :connect :connection
+      alias connect connection
 
       def disconnect
-        if connection
-          connection.close if connection.open?
-          @connection = nil
-        end
+        return unless connection
+
+        connection.close if connection.open?
+        @connection = nil
       end
     end
   end

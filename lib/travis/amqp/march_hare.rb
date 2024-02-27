@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'march_hare'
 
 module Travis
@@ -11,9 +13,7 @@ module Travis
         self
       end
 
-      def config
-        @config
-      end
+      attr_reader :config
 
       def connected?
         !!@connection
@@ -22,13 +22,13 @@ module Travis
       def connection
         @connection ||= MarchHare.connect(config)
       end
-      alias :connect :connection
+      alias connect connection
 
       def disconnect
-        if connection
-          connection.close if connection.isOpen
-          @connection = nil
-        end
+        return unless connection
+
+        connection.close if connection.isOpen
+        @connection = nil
       end
     end
   end

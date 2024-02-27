@@ -1,10 +1,10 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
-$:.unshift File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift File.expand_path('lib', __dir__)
 require 'travis/amqp/version'
 
 Gem::Specification.new do |s|
-  s.name          = "travis-amqp"
+  s.name          = 'travis-amqp'
   s.version       = Travis::Amqp::VERSION
   s.authors       = ['Travis CI']
   s.email         = 'contact@travis-ci.org'
@@ -16,4 +16,6 @@ Gem::Specification.new do |s|
   s.platform      = Gem::Platform::RUBY
   s.require_paths = ['lib']
   s.rubyforge_project = '[none]'
+
+  s.required_ruby_version = '~> 3.2'
 end
