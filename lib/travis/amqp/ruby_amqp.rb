@@ -10,7 +10,7 @@ module Travis
 
     class << self
       def setup(config)
-        send(:config=, config.to_h, false)
+        send(:config=, config.to_h, deprecated: false)
       end
 
       attr_reader :config
